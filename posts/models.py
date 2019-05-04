@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-
+from django.contrib.auth.models import User
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
@@ -18,7 +18,6 @@ from .utils import get_read_time
 
 class PostManager(models.Manager):
     def active(self, *args, **kwargs):
-        # Post.objects.all() = super(PostManager, self).all()
         return super(PostManager, self).filter(draft=False).filter(publish__lte=timezone.now())
 
 
@@ -30,10 +29,9 @@ def upload_location(instance, filename):
 
 
 class Post(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1,
-                             on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=120)
-    slug = models.SlugField(unique=True, null=True,blank=True)
+    slug = models.SlugField(unique=True, null=True, blank=True)
     image = models.ImageField(upload_to=upload_location, null=True, blank=True,
                               width_field="width_field",
                               height_field="height_field")
