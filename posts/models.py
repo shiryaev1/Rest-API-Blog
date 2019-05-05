@@ -21,20 +21,18 @@ class PostManager(models.Manager):
         return super(PostManager, self).filter(draft=False).filter(publish__lte=timezone.now())
 
 
-def upload_location(instance, filename):
-    PostModel = instance.__class__
-    new_id = PostModel.objects.order_by("id").last().id + 1
-
-    return "%s/%s" %(new_id, filename)
+# def upload_location(instance, filename):
+#     PostModel = instance.__class__
+#     new_id = PostModel.objects.order_by("id").last().id + 1
+#
+#     return "%s/%s" %(new_id, filename)
 
 
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=120)
     slug = models.SlugField(unique=True, null=True, blank=True)
-    image = models.ImageField(upload_to=upload_location, null=True, blank=True,
-                              width_field="width_field",
-                              height_field="height_field")
+    image = models.ImageField(upload_to='image', null=True, blank=True)
     height_field = models.IntegerField(default=0)
     width_field = models.IntegerField(default=0)
     content = models.TextField(blank=True)
