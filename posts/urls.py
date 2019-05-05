@@ -8,6 +8,8 @@ from posts.views import (
     PostCreateAPIView
 )
 
+app_name = 'posts-api'
+
 urlpatterns = [
     path('posts/', PostListAPIView.as_view(), name='list'),
     path('posts/create', PostCreateAPIView.as_view(), name='create'),
