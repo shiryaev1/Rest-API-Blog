@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+from django.contrib.auth.models import User
 
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -22,8 +23,7 @@ class CommentManager(models.Manager):
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1,
-                             on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
