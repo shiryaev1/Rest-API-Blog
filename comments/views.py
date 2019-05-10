@@ -4,6 +4,7 @@ from rest_framework.filters import (
     SearchFilter,
     OrderingFilter
     )
+from rest_framework.mixins import DestroyModelMixin, UpdateModelMixin
 from rest_framework.generics import (
     ListAPIView,
     RetrieveAPIView,
@@ -24,7 +25,8 @@ from posts.permissions import IsOwnerOrReadOnly
 from comments.serializers import (
     CommentSerializer,
     CommentDetailSerializer,
-    create_comment_serializer
+    create_comment_serializer,
+    CommentEditSerializer
     )
 
 
@@ -69,19 +71,12 @@ class CommentDetailAPIView(RetrieveAPIView):
     lookup_field = 'pk'
 
 
-# class PostUpdateAPIView(RetrieveUpdateAPIView):
-#     queryset = Post.objects.all()
-#     serializer_class = PostCreateUpdateSerializer
-#     lookup_field = 'slug'
-#     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
-#
-#     def perform_update(self, serializer):
-#         serializer.save(user=self.request.user)
+class CommentsEditAPIView(DestroyModelMixin, UpdateModelMixin, RetrieveAPIView):
+    queryset = Comment.objects.filter(id__gte=0)
+    serializer_class = CommentEditSerializer
 
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
 
-# class PostDeleteAPIView(DestroyAPIView):
-#     queryset = Post.objects.all()
-#     serializer_class = PostDetailSerializer
-#     lookup_field = 'slug'
-#     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
-
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
