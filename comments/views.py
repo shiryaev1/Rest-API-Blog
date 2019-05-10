@@ -30,7 +30,7 @@ from comments.serializers import (
 
 class CommentCreateAPIView(CreateAPIView):
     queryset = Comment.objects.all()
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
         model_type = self.request.GET.get('type')
